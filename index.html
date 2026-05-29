@@ -50,6 +50,17 @@ main{padding:1.25rem 2rem;max-width:1400px;margin:0 auto;display:grid;gap:1.2rem
   font-size:.72rem;cursor:pointer;transition:all .13s;user-select:none;white-space:nowrap;
 }
 .cbox{position:relative}
+@media(max-width:480px){
+  header{padding:.9rem 1rem}
+  header h1{font-size:1rem;margin-bottom:.65rem}
+  .controls{gap:.5rem}
+  .controls input[type=date]{font-size:.8rem;padding:.35rem .45rem}
+  main{padding:.75rem .75rem;gap:.9rem}
+  .card{padding:.85rem 1rem}
+  .stat .val{font-size:1.1rem}
+  .chip{padding:.35rem .65rem;font-size:.78rem}
+  .chips{max-height:120px}
+}
 </style>
 </head>
 <body>
@@ -112,10 +123,12 @@ const sdEl = document.getElementById('sd');
 const edEl = document.getElementById('ed');
 sdEl.value = DATES[0].split('/').join('-');
 edEl.value = DATES[DATES.length - 1].split('/').join('-');
+sdEl.min = sdEl.value; sdEl.max = edEl.value;
+edEl.min = sdEl.value; edEl.max = edEl.value;
 
 function filtered() {
-  const s = sdEl.value.split('-').join('/');
-  const e = edEl.value.split('-').join('/');
+  const s = sdEl.value ? sdEl.value.split('-').join('/') : DATES[0];
+  const e = edEl.value ? edEl.value.split('-').join('/') : DATES[DATES.length - 1];
   return DATES.filter(d => d >= s && d <= e);
 }
 
@@ -275,8 +288,10 @@ function updateAll() {
   updateTrends(ds);
 }
 
-sdEl.addEventListener('change', updateAll);
-edEl.addEventListener('change', updateAll);
+['input', 'change'].forEach(function(ev) {
+  sdEl.addEventListener(ev, updateAll);
+  edEl.addEventListener(ev, updateAll);
+});
 updateAll();
 </script>
 </body>
